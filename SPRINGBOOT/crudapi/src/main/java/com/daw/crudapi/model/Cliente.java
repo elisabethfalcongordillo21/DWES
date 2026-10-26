@@ -38,6 +38,9 @@ public class Cliente {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = true)
+    private int edad;
+
     @Column(nullable = false)
     private String telefono;
 

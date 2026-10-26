@@ -1,9 +1,14 @@
 package com.daw.crudapi.controller;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import com.daw.crudapi.model.Cliente;
@@ -59,5 +64,39 @@ public class CrudApiController {
 
         return clienteGuardado.toString();
     }
+
+    @GetMapping("/testconsultas")
+    public String testConsultas() {
+
+        List<Cliente> listaClientes;
+
+        //Primero definimos el pageable con la pagina y cantidad de elementos por pagina, ordenado
+        Pageable paginacion = PageRequest.of(1,40,Sort.by(Sort.Order.asc("nombre"),Sort.Order.desc("email")));
+
+        //Despues usamos findall con esa paginacion para devolver un objeto page
+        //Que tiene todos las entidades y los datos necesarios para la paginacion
+        Page<Cliente> pagina = repoCli.findAll(paginacion);
+
+        //Para ordenar una consulta usamos Sort.by, podemos meter varios campos de ordenacion
+        listaClientes = repoCli.findAll(Sort.by("nombre").descending());
+
+        //Borrar al cliente 3
+        if (repoCli.existsById(3L))
+            repoCli.deleteById(3L);
+
+        //Con getContent sacamos la lista de clientes completa
+        listaClientes = pagina.getContent();
+
+        Optional<Cliente> cliente = repoCli.findByEmail("cliente.d8e4d76b@villalpando.org");
+
+        listaClientes = repoCli.findTop8By(Sort.by("edad").ascending());
+
+        boolean existenMenores = repoCli.existsByEdadLessThanEqual(5);
+
+        return existenMenores?"Existen Menores":"No existen menores";
+
+    }
+
+
 
 }
