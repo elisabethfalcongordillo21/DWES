@@ -21,11 +21,9 @@ public class Usuario {
     private String password;
     private LocalDate fechaRegistro;
 
-    // El ER tiene perfil_id (FK) pero no hay entidad Perfil: se deja como columna simple
     @Column(name = "perfil_id")
     private Long perfilId;
 
-    // 1:N -> un usuario hace muchas valoraciones
     @OneToMany(mappedBy = "usuario")
     private List<Valoracion> valoraciones = new ArrayList<>();
 }

@@ -19,7 +19,6 @@ public class Modalidad {
     private String nombre;
     private String descripcion;
 
-    // 1:N -> una modalidad tiene muchas agrupaciones
     @OneToMany(mappedBy = "modalidad")
     private List<Agrupacion> agrupaciones = new ArrayList<>();
 }

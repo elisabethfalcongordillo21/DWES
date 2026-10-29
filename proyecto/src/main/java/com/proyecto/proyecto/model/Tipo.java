@@ -18,7 +18,6 @@ public class Tipo {
 
     private String disenador;
 
-    // 1:1 -> dueño de la relacion (tiene la FK agrupacion_id)
     @OneToOne
     @JoinColumn(name = "agrupacion_id")
     private Agrupacion agrupacion;

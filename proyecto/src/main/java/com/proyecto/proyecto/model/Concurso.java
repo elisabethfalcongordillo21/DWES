@@ -21,7 +21,6 @@ public class Concurso {
     private LocalDate fechaFin;
     private String teatro;
 
-    // 1:N -> un concurso incluye muchas participaciones
     @OneToMany(mappedBy = "concurso")
     private List<Participacion> participaciones = new ArrayList<>();
 }

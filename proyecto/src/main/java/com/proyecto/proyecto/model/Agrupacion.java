@@ -26,20 +26,16 @@ public class Agrupacion {
     private String web;
     private String fotoUrl;
 
-    // N:1 -> muchas agrupaciones pertenecen a una modalidad
     @ManyToOne
     @JoinColumn(name = "modalidad_id")
     private Modalidad modalidad;
 
-    // 1:1 -> una agrupacion tiene un tipo (la FK esta en Tipo)
     @OneToOne(mappedBy = "agrupacion", cascade = CascadeType.ALL)
     private Tipo tipo;
 
-    // 1:N -> una agrupacion tiene muchas participaciones
     @OneToMany(mappedBy = "agrupacion")
     private List<Participacion> participaciones = new ArrayList<>();
 
-    // N:M -> lado inverso (el dueño es Autor)
     @ManyToMany(mappedBy = "agrupaciones")
     private List<Autor> autores = new ArrayList<>();
 }

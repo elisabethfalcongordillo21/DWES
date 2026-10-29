@@ -24,17 +24,14 @@ public class Cancion {
 
     private Integer duracion;
 
-    // FK participacion_id tal como aparece en el ER
     @ManyToOne
     @JoinColumn(name = "participacion_id")
     private Participacion participacion;
 
-    // N:1 -> muchas canciones tienen un autor (FK autor_id)
     @ManyToOne
     @JoinColumn(name = "autor_id")
     private Autor autor;
 
-    // 1:N -> una cancion recibe muchas valoraciones
     @OneToMany(mappedBy = "cancion")
     private List<Valoracion> valoraciones = new ArrayList<>();
 }
