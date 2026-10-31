@@ -28,7 +28,6 @@ public class Participacion {
     @JoinColumn(name = "concurso_id")
     private Concurso concurso;
 
-    @ManyToOne
-    @JoinColumn(name = "cancion_id")
-    private Cancion cancion;
+    @OneToMany(mappedBy = "participacion")
+    private List<Cancion> canciones = new ArrayList<>();
 }

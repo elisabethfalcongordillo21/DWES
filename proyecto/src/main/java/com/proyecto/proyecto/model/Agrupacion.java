@@ -36,6 +36,7 @@ public class Agrupacion {
     @OneToMany(mappedBy = "agrupacion")
     private List<Participacion> participaciones = new ArrayList<>();
 
+   
     @ManyToMany(mappedBy = "agrupaciones")
     private List<Autor> autores = new ArrayList<>();
 }

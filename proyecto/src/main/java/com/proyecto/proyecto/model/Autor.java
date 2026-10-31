@@ -25,12 +25,14 @@ public class Autor {
     @Column(length = 3000)
     private String biografia;
 
+    
     @ManyToMany
     @JoinTable(name = "autor_agrupacion",
             joinColumns = @JoinColumn(name = "autor_id"),
             inverseJoinColumns = @JoinColumn(name = "agrupacion_id"))
     private List<Agrupacion> agrupaciones = new ArrayList<>();
 
+    
     @OneToMany(mappedBy = "autor")
     private List<Cancion> canciones = new ArrayList<>();
 }

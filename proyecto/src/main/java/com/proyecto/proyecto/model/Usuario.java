@@ -21,9 +21,6 @@ public class Usuario {
     private String password;
     private LocalDate fechaRegistro;
 
-    @Column(name = "perfil_id")
-    private Long perfilId;
-
     @OneToMany(mappedBy = "usuario")
     private List<Valoracion> valoraciones = new ArrayList<>();
 }
