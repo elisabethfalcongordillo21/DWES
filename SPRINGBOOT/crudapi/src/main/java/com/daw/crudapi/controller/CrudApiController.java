@@ -91,12 +91,12 @@ public class CrudApiController {
 
         listaClientes = repoCli.findTop8By(Sort.by("edad").ascending());
 
-        boolean existenMenores = repoCli.existsByEdadLessThanEqual5();
+        boolean existenMenores = repoCli.existsByEdadLessThanEqual(5);
 
         return existenMenores?"Existen Menores":"No existen menores";
 
     }
 
-
+    
 
 }

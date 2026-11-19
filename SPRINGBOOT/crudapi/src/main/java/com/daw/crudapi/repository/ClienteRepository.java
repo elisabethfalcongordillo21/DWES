@@ -18,8 +18,6 @@ List<Cliente> findTop8By(Sort sort);
 //Existe un cliente con menos de n años
 boolean  existsByEdadLessThanEqual(int edad);
 
-boolean existsByEdadLessThanEqual5();
-
 
 
 }
