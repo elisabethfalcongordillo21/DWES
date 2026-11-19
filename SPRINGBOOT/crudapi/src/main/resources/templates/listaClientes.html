@@ -23,8 +23,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         </div>
-        <h1>Lista de CLientes</h1>
-        <a th:href="@{/clientes/nuevo}" class="btn btn-primary mb-3">Crear Cliente</a>
+        <h1 >Lista de CLientes <span th:text="${clientes.getNumber()}"></span></h1>
+        <a th:href="@{/cliente/nuevo}" class="btn btn-primary mb-3">
+            Crear Cliente
+        </a>
+        
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -37,7 +40,7 @@
             </thead>
 
             <tbody>
-                <tr th:each="cliente : ${clientes}">
+                <tr th:each="cliente : ${clientes.getContent()}">
 
                     <td th:text="${cliente.nombre}"></td>
                     <td th:text="${cliente.apellidos}"></td>

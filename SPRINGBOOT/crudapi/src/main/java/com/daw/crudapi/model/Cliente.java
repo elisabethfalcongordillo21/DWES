@@ -3,6 +3,7 @@ package com.daw.crudapi.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -47,7 +48,7 @@ public class Cliente {
     // En mappedBy va el nombre del campo de la otra entidad
     // Que sirve para mapear esta
     @ToString.Exclude
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(cascade=CascadeType.REMOVE,mappedBy = "cliente", orphanRemoval = true)
     private List<Direccion> direcciones = new ArrayList<>();
 
     public void addDireccion(Direccion direccion) {
@@ -59,7 +60,7 @@ public class Cliente {
     }
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
+    @OneToMany(cascade=CascadeType.REMOVE,mappedBy = "cliente", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Pedido> pedidos = new ArrayList<>();
 
     /**

@@ -1,5 +1,6 @@
 package com.daw.crudapi.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,7 +46,7 @@ public class Direccion {
     // Ponemos nullable false ya que no puede haber direcciones sin clientes
     // asignado
     @ToString.Exclude
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @JoinColumn( name = "cliente_id", nullable = false)
     private Cliente cliente;
 
 }

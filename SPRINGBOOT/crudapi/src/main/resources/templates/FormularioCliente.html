@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--
+    Ubicación: src/main/resources/templates/formularioCliente.html
+
+    UNA sola vista para crear y para editar. Sabe en qué modo está mirando el id:
+        - cliente.id == null  -> alta  : el formulario hace POST a /cliente/insertar
+        - cliente.id != null  -> edición: el formulario hace PUT  a /cliente/{id}/editar
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${cliente.id == null} ? 'Nuevo cliente' : 'Editar cliente'">Cliente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+     <div th:fragment="alertas">
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    </div>
+    <div class="container mt-4" style="max-width: 600px;">
+
+        <h1 th:text="${cliente.id == null} ? 'Nuevo cliente' : 'Editar cliente'"></h1>
+
+        <!-- th:object enlaza el formulario con el objeto "cliente" del model.
+             th:field="*{nombre}" rellena value, name e id del campo con cliente.nombre.
+             El formulario es siempre method="post"; si estamos editando, el campo oculto
+             _method=put hace que Spring lo trate como PUT. -->
+        <form th:object="${cliente}"
+            th:action="${cliente.id == null} ? @{/cliente/insertar} : @{/cliente/{id}/editar(id=${cliente.id})}"
+            method="post">
+
+            <input type="hidden" name="_method" value="put" th:if="${cliente.id != null}">
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" th:field="*{nombre}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="apellidos" class="form-label">Apellidos</label>
+                <input type="text" class="form-control" th:field="*{apellidos}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" th:field="*{email}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" th:field="*{telefono}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="edad" class="form-label">Edad</label>
+                <input type="number" class="form-control" th:field="*{edad}" min="0" max="120" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a th:href="@{/cliente/lista}" class="btn btn-outline-secondary">Cancelar</a>
+
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
