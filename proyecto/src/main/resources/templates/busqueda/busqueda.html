@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Búsqueda avanzada</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div th:replace="~{fragments/menu :: navbar}"></div>
+
+    <div class="container mt-4">
+
+        <div th:replace="~{fragments/menu :: alertas}"></div>
+
+        <h1>Búsqueda avanzada</h1>
+
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Agrupación por nombre y localidad</h5>
+                        <form th:action="@{/busqueda}" method="get">
+                            <input type="hidden" name="tipo" value="agrupacion">
+                            <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre contiene...">
+                            <input type="text" name="localidad" class="form-control mb-2"
+                                placeholder="Localidad contiene...">
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Agrupación por localidad y modalidad</h5>
+                        <form th:action="@{/busqueda}" method="get">
+                            <input type="hidden" name="tipo" value="modalidad">
+                            <input type="text" name="localidad" class="form-control mb-2"
+                                placeholder="Localidad exacta" required>
+                            <select name="modalidadId" class="form-select mb-2" required>
+                                <option value="">-- Modalidad --</option>
+                                <option th:each="m : ${modalidades}" th:value="${m.id}" th:text="${m.nombre}"></option>
+                            </select>
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Agrupación por texto</h5>
+                        <p class="text-muted small">Busca en el nombre y en la descripción.</p>
+                        <form th:action="@{/busqueda}" method="get">
+                            <input type="hidden" name="tipo" value="texto">
+                            <input type="text" name="texto" class="form-control mb-2" placeholder="Texto a buscar"
+                                required>
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Autor por nombre y apellidos</h5>
+                        <form th:action="@{/busqueda}" method="get">
+                            <input type="hidden" name="tipo" value="autor">
+                            <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre contiene...">
+                            <input type="text" name="apellidos" class="form-control mb-2"
+                                placeholder="Apellidos contienen...">
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${buscado}">
+            <h2>Resultados</h2>
+
+            <div th:if="${agrupaciones != null}">
+                <p th:if="${agrupaciones.isEmpty()}" class="text-muted">No se ha encontrado ninguna agrupación.</p>
+                <table class="table table-striped" th:unless="${agrupaciones.isEmpty()}">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Modalidad</th>
+                            <th>Localidad</th>
+                            <th>Año fundación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="agrupacion : ${agrupaciones}">
+                            <td><a th:href="@{/agrupacion/detalle/{id}(id=${agrupacion.id})}"
+                                    th:text="${agrupacion.nombre}"></a></td>
+                            <td th:text="${agrupacion.modalidad?.nombre}"></td>
+                            <td th:text="${agrupacion.localidad}"></td>
+                            <td th:text="${agrupacion.anioFundacion}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:if="${autores != null}">
+                <p th:if="${autores.isEmpty()}" class="text-muted">No se ha encontrado ningún autor.</p>
+                <table class="table table-striped" th:unless="${autores.isEmpty()}">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellidos</th>
+                            <th>Apodo</th>
+                            <th>Localidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="autor : ${autores}">
+                            <td th:text="${autor.nombre}"></td>
+                            <td th:text="${autor.apellidos}"></td>
+                            <td th:text="${autor.apodo}"></td>
+                            <td th:text="${autor.localidad}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

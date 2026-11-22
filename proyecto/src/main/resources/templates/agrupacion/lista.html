@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agrupaciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div th:replace="~{fragments/menu :: navbar}"></div>
+
+    <div class="container mt-4">
+
+        <div th:replace="~{fragments/menu :: alertas}"></div>
+
+        <h1>Agrupaciones</h1>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a th:href="@{/agrupacion/nuevo}" class="btn btn-primary">Nueva agrupación</a>
+
+            <div>
+                <span class="me-2">Por página:</span>
+                <a th:each="n : ${#numbers.sequence(5, 20, 5)}" th:href="@{/agrupacion(page=0, size=${n})}"
+                    th:text="${n}" class="btn btn-sm me-1"
+                    th:classappend="${n == size} ? 'btn-secondary' : 'btn-outline-secondary'"></a>
+            </div>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Modalidad</th>
+                    <th>Localidad</th>
+                    <th>Año fundación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="agrupacion : ${agrupaciones.content}">
+                    <td>
+                        <a th:href="@{/agrupacion/detalle/{id}(id=${agrupacion.id})}"
+                            th:text="${agrupacion.nombre}"></a>
+                    </td>
+                    <td th:text="${agrupacion.modalidad?.nombre}"></td>
+                    <td th:text="${agrupacion.localidad}"></td>
+                    <td th:text="${agrupacion.anioFundacion}"></td>
+                    <td>
+                        <a th:href="@{/agrupacion/editar/{id}(id=${agrupacion.id})}"
+                            class="btn btn-secondary btn-sm">Modificar</a>
+
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#modalEliminar"
+                            th:attr="data-url=@{/agrupacion/eliminar/{id}(id=${agrupacion.id})},data-nombre=${agrupacion.nombre}">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <nav th:if="${agrupaciones.totalPages > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${agrupaciones.first} ? 'disabled'">
+                    <a class="page-link"
+                        th:href="@{/agrupacion(page=${agrupaciones.number - 1}, size=${size})}">Anterior</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, agrupaciones.totalPages - 1)}"
+                    th:classappend="${i == agrupaciones.number} ? 'active'">
+                    <a class="page-link" th:href="@{/agrupacion(page=${i}, size=${size})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${agrupaciones.last} ? 'disabled'">
+                    <a class="page-link"
+                        th:href="@{/agrupacion(page=${agrupaciones.number + 1}, size=${size})}">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div th:replace="~{fragments/menu :: modalEliminar}"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,4 +1,4 @@
-package com.proyecto.proyecto.model;
+package com.proyecto.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;

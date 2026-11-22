@@ -1,4 +1,4 @@
-package com.proyecto.proyecto.model;
+package com.proyecto.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,7 +23,6 @@ public class Agrupacion {
 
     private String localidad;
     private Integer anioFundacion;
-    private String web;
     private String fotoUrl;
 
     @ManyToOne
