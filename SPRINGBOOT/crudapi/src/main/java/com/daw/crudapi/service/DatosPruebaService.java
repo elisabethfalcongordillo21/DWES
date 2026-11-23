@@ -81,6 +81,7 @@ public class DatosPruebaService {
         Cliente cliente = new Cliente();
         cliente.setNombre(faker.name().firstName());
         cliente.setApellidos(faker.name().lastName() + " " + faker.name().lastName());
+        cliente.setEdad(faker.number().numberBetween(18, 75));
         // Fragmento de UUID para que el email no se repita aunque llames varias veces
         String sufijo = UUID.randomUUID().toString().substring(0, 8);
         cliente.setEmail("cliente." + sufijo + "@" + faker.internet().domainName());

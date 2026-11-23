@@ -1,12 +1,14 @@
 package com.daw.crudapi.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.daw.crudapi.model.Cliente;
 import com.daw.crudapi.repository.ClienteRepository;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequestMapping("/cliente")
@@ -43,6 +48,11 @@ public class MainController {
 
     // Si se llama al endpoint con la url "cliente/6/eliminar" se mapea el 6 en la
     // variable id
+    //TODO recibir la pagina y pasarsela al listado para que despues de borrar no se vaya a la primera pagina
+    // y sabremos el id del cliente a eliminar
+
+   // Si se llama al endpoint con la url "cliente/6/eliminar" se mapea el 6 en la
+    // variable id
     // y sabremos el id del cliente a eliminar
     @DeleteMapping("/{id}/eliminar")
     public String eliminarCliente(@PathVariable long id) {
@@ -55,6 +65,51 @@ public class MainController {
         // borramos el cliente
         repoCli.deleteById(id);
 
+        return "redirect:/cliente/lista";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String editarCliente(@PathVariable long id,Model model, RedirectAttributes ra)
+    {
+
+        //Cargamos el clente asociado al id
+        Optional<Cliente> opCli = repoCli.findById(id);
+
+        if (!opCli.isPresent()) 
+        {
+            ra.addFlashAttribute("errror", "El cliente con id " + id + " no existe");
+            return "redirect:/cliente/lista";
+        }
+
+        //Pasamos la entity de cliente cargada con los datos al formulario
+        model.addAttribute("cliente",opCli.get());
+
+        return "FormularioCliente";
+    }
+
+    @PutMapping("/{id}/actualizar")
+    public String actualizarCliente(@PathVariable String id, Model model,@ModelAttribute Cliente cliente,RedirectAttributes ra) {
+
+
+        Optional<Cliente> antiguo = repoCli.findById(cliente.getId());
+
+
+        System.out.println(" llega el cliente con id " + cliente.getId());
+        if (repoCli.findById(cliente.getId()).isEmpty())
+        {
+            model.addAttribute("error", "El cliente no existe");
+            return "FormularioCliente";
+        }
+
+        //Cargo las direcciones y pedidos del cliente
+        cliente.setDirecciones(antiguo.get().getDirecciones());
+        cliente.setPedidos(antiguo.get().getPedidos());
+
+        //Actualizamos el cliente
+        repoCli.save(cliente);
+
+        //Si todo ha ido bien enviamos un mensaje y cargamos la vista
+        ra.addFlashAttribute("sucess","Cliente modificado correctamente");
         return "redirect:/cliente/lista";
     }
 
