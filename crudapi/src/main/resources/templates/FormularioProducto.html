@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!--
+    Ubicación: src/main/resources/templates/FormularioProducto.html
+
+    UNA sola vista para crear y para editar. Sabe en qué modo está mirando el id:
+        - producto.id == null  -> alta  : el formulario hace POST a /producto/insertar
+        - producto.id != null  -> edición: el formulario hace PUT  a /producto/{id}/actualizar
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title th:text="${producto.id == null} ? 'Nuevo producto' : 'Editar producto'">Producto</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div th:fragment="alertas">
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    </div>
+    <div class="container mt-4" style="max-width: 600px;">
+
+        <h1 th:text="${producto.id == null} ? 'Nuevo producto' : 'Editar producto'"></h1>
+
+        <!-- th:object enlaza el formulario con el objeto "producto" del model.
+             th:field="*{nombre}" rellena value, name e id del campo con producto.nombre.
+             El formulario es siempre method="post"; si estamos editando, el campo oculto
+             _method=put hace que Spring lo trate como PUT. -->
+        <form th:object="${producto}"
+            th:action="${producto.id == null} ? @{/producto/insertar} : @{/producto/{id}/actualizar(id=${producto.id})}"
+            method="post">
+
+            <input type="hidden" name="_method" value="put" th:if="${producto.id != null}">
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" th:field="*{nombre}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <input type="text" class="form-control" th:field="*{descripcion}">
+            </div>
+
+            <div class="mb-3">
+                <label for="precio" class="form-label">Precio</label>
+                <input type="number" step="0.01" min="0" class="form-control" th:field="*{precio}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="pedidoId" class="form-label">Pedido</label>
+                <select id="pedidoId" name="pedidoId" class="form-select" required>
+                    <option value="" disabled th:selected="${producto.pedido == null}">Elige un pedido</option>
+                    <option th:each="p : ${pedidos}" th:value="${p.id}"
+                        th:selected="${producto.pedido != null and producto.pedido.id == p.id}"
+                        th:text="'Pedido #' + ${p.id} + ' - ' + ${p.cliente.nombre} + ' ' + ${p.cliente.apellidos}">
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a th:href="@{/producto/lista}" class="btn btn-outline-secondary">Cancelar</a>
+
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

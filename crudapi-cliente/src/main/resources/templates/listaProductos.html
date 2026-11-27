@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Productos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container mt-4">
+
+        <div th:fragment="alertas">
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="close"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+
+        <h1>Lista de Productos <span th:text="${productos.getNumber()}"></span></h1>
+
+        <a th:href="@{/producto/nuevo}" class="btn btn-primary mb-3">Crear Producto</a>
+        <a th:href="@{/cliente/lista}" class="btn btn-outline-secondary mb-3">Ver Clientes</a>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Cliente</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="producto : ${productos.getContent()}">
+
+                    <td th:text="${producto.nombre}"></td>
+                    <td th:text="${producto.descripcion}"></td>
+                    <td th:text="${#numbers.formatDecimal(producto.precio, 1, 2) + ' €'}"></td>
+                    <td th:text="${producto.cliente.nombre + ' ' + producto.cliente.apellidos}"></td>
+
+                    <td>
+                        <!-- Mandamos la pagina actual para volver a ella despues de borrar -->
+                        <form th:action="@{/producto/{id}/eliminar(id=${producto.id}, pagina=${productos.getNumber()})}"
+                            th:method="delete" onsubmit="return confirm('¿Eliminar este producto?');">
+
+                            <input type="hidden" name="_method" value="delete">
+
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                Eliminar
+                            </button>
+
+                        </form>
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="d-flex gap-2">
+            <a th:if="${productos.hasPrevious()}"
+                th:href="@{/producto/lista(pagina=${productos.getNumber() - 1})}"
+                class="btn btn-outline-secondary btn-sm">Anterior</a>
+            <a th:if="${productos.hasNext()}"
+                th:href="@{/producto/lista(pagina=${productos.getNumber() + 1})}"
+                class="btn btn-outline-secondary btn-sm">Siguiente</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
